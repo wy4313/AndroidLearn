@@ -2,6 +2,7 @@ package com.example.learn.learn04;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivityLearn04 extends AppCompatActivity {
+    private static final String TAG = "MainActivityLearn04";
 
     private TextView mTextView;
     private Button mTrueButton;
@@ -34,6 +36,36 @@ public class MainActivityLearn04 extends AppCompatActivity {
 
         mQuestionIndex = -1;
         updateQuestionText(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 
     private void loadingViews() {
