@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 public class MainActivityLearn04 extends AppCompatActivity {
     private static final String TAG = "MainActivityLearn04";
+    private static final String BUNDLE_KEY_QUESTION_INDEX = "MainActivityLearn04.BundleKeyQuestionIndex";
+
 
     private TextView mTextView;
     private Button mTrueButton;
@@ -31,41 +33,24 @@ public class MainActivityLearn04 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_learn04);
-
         loadingViews();
 
-        mQuestionIndex = -1;
+        if (null != savedInstanceState) {
+            mQuestionIndex = savedInstanceState.getInt(BUNDLE_KEY_QUESTION_INDEX, 0);
+            mQuestionIndex--;
+        } else {
+            mQuestionIndex = -1;
+        }
         updateQuestionText(true);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: ");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: ");
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Toast.makeText(getApplicationContext(),
+                String.format("save state index:%d", mQuestionIndex),
+                Toast.LENGTH_SHORT).show();
+        outState.putInt(BUNDLE_KEY_QUESTION_INDEX, mQuestionIndex);
     }
 
     private void loadingViews() {
@@ -131,6 +116,39 @@ public class MainActivityLearn04 extends AppCompatActivity {
             }
             mQuestionIndex = --mQuestionIndex % mQuestions.length;
         }
+        Toast.makeText(getApplicationContext(),
+                String.format("show question index:%d", mQuestionIndex),
+                Toast.LENGTH_SHORT).show();
         mTextView.setText(mQuestions[mQuestionIndex].getStringResId());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 }
