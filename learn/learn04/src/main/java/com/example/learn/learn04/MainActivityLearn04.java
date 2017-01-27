@@ -1,5 +1,6 @@
 package com.example.learn.learn04;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +13,11 @@ import android.widget.Toast;
 
 public class MainActivityLearn04 extends AppCompatActivity {
     private static final String TAG = "MainActivityLearn04";
+
     public static final String KEY_QUESTION_INDEX =
             "com.example.learn.learn04.MainActivityLearn04.BundleKeyQuestionIndex";
+
+    private static final int REQUEST_CODE_CHEAT = 1;
 
 
     private TextView mTextView;
@@ -23,6 +27,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
     private ImageButton mNextButton;
     private int mQuestionIndex;
     private Button mCheatButton;
+    private boolean mIsCheater;
 
     private Question[] mQuestions = new Question[]{
             new Question(R.string.question_oceans, true),
@@ -86,6 +91,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
         mPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIsCheater = false;
                 updateQuestionText(false);
             }
         });
@@ -94,6 +100,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIsCheater = false;
                 updateQuestionText(true);
             }
         });
@@ -104,15 +111,39 @@ public class MainActivityLearn04 extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = MainActivityLearn04ShowAnswer.newIntent(
                         MainActivityLearn04.this, mQuestions[mQuestionIndex].getAnswer());
-                startActivity(intent);
+                mIsCheater = false;
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
+    }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult requestCode:" + requestCode + " resultCode:" + resultCode);
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (null == data) {
+                    Log.d(TAG, "onActivityResult: data is null");
+                    return;
+                }
+                mIsCheater = MainActivityLearn04ShowAnswer.isAnswerShown(data);
+            }
+        } else {
+            Log.d(TAG, "onActivityResult: unknow requestCode:" + requestCode);
+        }
+        Log.d(TAG, "onActivityResult: mIsCheater:" + mIsCheater);
     }
 
     private void checkAnswer(boolean answer) {
         int toastTextID = 0;
+        if (mIsCheater) {
+            Toast.makeText(getApplicationContext(), R.string.cheat_wrong_text, Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+
         if (answer == mQuestions[mQuestionIndex].getAnswer()) {
             toastTextID = R.string.correct_text;
         } else {

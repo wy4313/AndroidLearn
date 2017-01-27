@@ -1,5 +1,6 @@
 package com.example.learn.learn04;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class MainActivityLearn04ShowAnswer extends AppCompatActivity {
                 Intent intent = getIntent();
                 boolean answer = intent.getBooleanExtra(KEY_QUESTION_INDEX, false);
                 mAnswerTextView.setText("Answer is:" + answer);
+                setActivityAnswerShowResult();
             }
         });
     }
@@ -44,5 +46,18 @@ public class MainActivityLearn04ShowAnswer extends AppCompatActivity {
         Intent i = new Intent(packageContext, MainActivityLearn04ShowAnswer.class);
         i.putExtra(EXTRA_QUESTION_ANSWER, answer);
         return i;
+    }
+
+    private static final String EXTRA_ANSWER_HAS_SHOW =
+            "com.example.learn.learn04.MainActivityLearn04ShowAnswer.ExtraAnswerHasShow";
+
+    private void setActivityAnswerShowResult() {
+        Intent i = new Intent();
+        i.putExtra(EXTRA_ANSWER_HAS_SHOW, true);
+        setResult(Activity.RESULT_OK, i);
+    }
+
+    public static boolean isAnswerShown(Intent intent) {
+        return intent.getBooleanExtra(EXTRA_ANSWER_HAS_SHOW, false);
     }
 }
