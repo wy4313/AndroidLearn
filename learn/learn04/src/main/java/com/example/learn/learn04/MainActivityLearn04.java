@@ -102,8 +102,8 @@ public class MainActivityLearn04 extends AppCompatActivity {
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivityLearn04.this, MainActivityLearn04ShowAnswer.class);
-                intent.putExtra(KEY_QUESTION_INDEX, mQuestions[mQuestionIndex].getAnswer());
+                Intent intent = MainActivityLearn04ShowAnswer.newIntent(
+                        MainActivityLearn04.this, mQuestions[mQuestionIndex].getAnswer());
                 startActivity(intent);
             }
         });
