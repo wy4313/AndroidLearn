@@ -23,4 +23,10 @@
         android:id="@+id/show_answer_btn"
         android:text="@string/show_answer_btn_text"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clean_preferences"
+        android:text="@string/clean_preferences"/>
+
 </LinearLayout>

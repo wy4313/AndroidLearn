@@ -1,7 +1,9 @@
 package com.example.learn.learn04;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +30,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
     private int mQuestionIndex;
     private Button mCheatButton;
     private boolean mIsCheater;
+    private SharedPreferences mSharedPreference;
 
     private Question[] mQuestions = new Question[]{
             new Question(R.string.question_oceans, true),
@@ -36,6 +39,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
             new Question(R.string.question_americas, true),
             new Question(R.string.question_asia, true),
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +114,9 @@ public class MainActivityLearn04 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = MainActivityLearn04ShowAnswer.newIntent(
-                        MainActivityLearn04.this, mQuestions[mQuestionIndex].getAnswer());
+                        MainActivityLearn04.this,
+                        mQuestionIndex,
+                        mQuestions[mQuestionIndex].getAnswer());
                 mIsCheater = false;
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
@@ -128,17 +134,23 @@ public class MainActivityLearn04 extends AppCompatActivity {
                     Log.d(TAG, "onActivityResult: data is null");
                     return;
                 }
-                mIsCheater = MainActivityLearn04ShowAnswer.isAnswerShown(data);
+                //mIsCheater = MainActivityLearn04ShowAnswer.isAnswerShown(data);
             }
         } else {
-            Log.d(TAG, "onActivityResult: unknow requestCode:" + requestCode);
+            Log.d(TAG, "onActivityResult: unknown requestCode:" + requestCode);
         }
         Log.d(TAG, "onActivityResult: mIsCheater:" + mIsCheater);
     }
 
+
     private void checkAnswer(boolean answer) {
         int toastTextID = 0;
-        if (mIsCheater) {
+        if (mSharedPreference == null) {
+            mSharedPreference = getSharedPreferences(
+                    MainActivityLearn04ShowAnswer.getCheatSharedPreferenceName(),
+                    Context.MODE_APPEND);
+        }
+        if (MainActivityLearn04ShowAnswer.isAnswerShown(mSharedPreference, mQuestionIndex)) {
             Toast.makeText(getApplicationContext(), R.string.cheat_wrong_text, Toast.LENGTH_SHORT)
                     .show();
             return;
