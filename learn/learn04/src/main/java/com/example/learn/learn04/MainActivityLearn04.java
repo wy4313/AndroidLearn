@@ -1,5 +1,6 @@
 package com.example.learn.learn04;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +12,8 @@ import android.widget.Toast;
 
 public class MainActivityLearn04 extends AppCompatActivity {
     private static final String TAG = "MainActivityLearn04";
-    private static final String BUNDLE_KEY_QUESTION_INDEX = "MainActivityLearn04.BundleKeyQuestionIndex";
+    public static final String KEY_QUESTION_INDEX =
+            "com.example.learn.learn04.MainActivityLearn04.BundleKeyQuestionIndex";
 
 
     private TextView mTextView;
@@ -20,6 +22,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
     private ImageButton mPreviousButton;
     private ImageButton mNextButton;
     private int mQuestionIndex;
+    private Button mCheatButton;
 
     private Question[] mQuestions = new Question[]{
             new Question(R.string.question_oceans, true),
@@ -36,7 +39,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
         loadingViews();
 
         if (null != savedInstanceState) {
-            mQuestionIndex = savedInstanceState.getInt(BUNDLE_KEY_QUESTION_INDEX, 0);
+            mQuestionIndex = savedInstanceState.getInt(KEY_QUESTION_INDEX, 0);
             mQuestionIndex--;
         } else {
             mQuestionIndex = -1;
@@ -50,7 +53,7 @@ public class MainActivityLearn04 extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),
                 String.format("save state index:%d", mQuestionIndex),
                 Toast.LENGTH_SHORT).show();
-        outState.putInt(BUNDLE_KEY_QUESTION_INDEX, mQuestionIndex);
+        outState.putInt(KEY_QUESTION_INDEX, mQuestionIndex);
     }
 
     private void loadingViews() {
@@ -94,6 +97,18 @@ public class MainActivityLearn04 extends AppCompatActivity {
                 updateQuestionText(true);
             }
         });
+
+        mCheatButton = (Button) this.findViewById(R.id.cheat_btn);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivityLearn04.this, MainActivityLearn04ShowAnswer.class);
+                intent.putExtra(KEY_QUESTION_INDEX, mQuestions[mQuestionIndex].getAnswer());
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void checkAnswer(boolean answer) {

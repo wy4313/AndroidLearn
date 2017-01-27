@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
+        android:layout_margin="10dp"
         android:text="@string/question_text" />
 
     <LinearLayout
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/false_btn_text" />
+
     </LinearLayout>
 
     <ImageButton
@@ -49,5 +51,14 @@
         android:layout_margin="10dp"
         android:contentDescription="@string/next_btn_text"
         android:src="@drawable/ic_next" />
+
+
+    <Button
+        android:id="@+id/cheat_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="10dp"
+        android:text="@string/cheat_text"/>
 
 </FrameLayout>
