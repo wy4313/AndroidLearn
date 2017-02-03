@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">learn05</string>
+    <string name="fragment_crime_title_hint">Enter a title for the crime.</string>
+    <string name="fragment_crime_details_text">Details</string>
+    <string name="fragment_crime_solved_label">Solved</string>
+</resources>
