@@ -112,7 +112,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Toast.makeText(getActivity(), mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT).show();
-            Intent intent = CrimeActivity.newIntent(getContext(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getContext(), mCrime.getId());
             //startActivity(intent);
             mClickPosition = mCrimeList.indexOf(mCrime);
             Log.d(TAG, "onClick: mClickPosition:" + mClickPosition);
