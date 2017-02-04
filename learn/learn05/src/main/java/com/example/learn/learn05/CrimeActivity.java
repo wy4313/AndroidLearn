@@ -15,7 +15,9 @@ public class CrimeActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new CrimeFragment();
+        return CrimeFragment.newInstance(
+                getIntentCrimeUUID(getIntent())
+        );
     }
 
     private static final String EXTRA_CRIME_ID = "com.example.learn.learn05.CrimeActivity.CrimeUUID";

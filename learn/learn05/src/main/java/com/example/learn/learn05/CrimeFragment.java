@@ -1,5 +1,6 @@
 package com.example.learn.learn05;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,12 +30,25 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private CheckBox mSolvedCheckbox;
 
 
+    private static final String BUNDLE_KEY_CRIME_ID = "com.example.learn.learn05.CrimeFragment.BundleKeyCrimeId";
+
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BUNDLE_KEY_CRIME_ID, crimeId);
+
+        CrimeFragment crimeFragment = new CrimeFragment();
+        crimeFragment.setArguments(bundle);
+        return crimeFragment;
+    }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         CrimeLab crimes = CrimeLab.get(getActivity());
-        UUID crimeUUID = CrimeActivity.getIntentCrimeUUID(getActivity().getIntent());
+//        UUID crimeUUID = CrimeActivity.getIntentCrimeUUID(getActivity().getIntent());
+        UUID crimeUUID = (UUID) getArguments().getSerializable(BUNDLE_KEY_CRIME_ID);
         mCrime = crimes.getCrime(crimeUUID);
         Log.d(TAG, "onCreate: mCrime:" + mCrime + " UUID:" + crimeUUID + " crimeLab:" + crimes);
     }
@@ -57,6 +71,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.d(TAG, "onTextChanged: ");
                 mCrime.setTitle(s.toString());
+                setFragmentResult();
             }
 
             @Override
@@ -77,8 +92,13 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.d(TAG, "onCheckedChanged: ");
                 mCrime.setSolved(isChecked);
+                setFragmentResult();
             }
         });
         return v;
+    }
+
+    private void setFragmentResult() {
+        getActivity().setResult(Activity.RESULT_OK, null);
     }
 }

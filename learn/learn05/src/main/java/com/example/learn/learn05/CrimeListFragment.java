@@ -1,5 +1,6 @@
 package com.example.learn.learn05;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,12 +25,17 @@ import java.util.List;
 
 public class CrimeListFragment extends Fragment {
     private static final String TAG = "CrimeListFragment";
+    private static final int REQUEST_CODE_CRIME_ACTIVITY = 1;
+    private static int mClickPosition = -1;
 
     private RecyclerView mCrimeRecyclerView;
+    private CrimeAdapter mAdapter;
+    private List<Crime> mCrimeList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
@@ -40,13 +46,34 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated: ");
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ");
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume: ");
+        super.onResume();
+        //updateUI();
+    }
+
     private void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
-
-
-        CrimeAdapter mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            CrimeLab crimeLab = CrimeLab.get(getActivity());
+            mCrimeList = crimeLab.getCrimes();
+            mAdapter = new CrimeAdapter(mCrimeList);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -86,7 +113,23 @@ public class CrimeListFragment extends Fragment {
         public void onClick(View v) {
             Toast.makeText(getActivity(), mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT).show();
             Intent intent = CrimeActivity.newIntent(getContext(), mCrime.getId());
-            startActivity(intent);
+            //startActivity(intent);
+            mClickPosition = mCrimeList.indexOf(mCrime);
+            Log.d(TAG, "onClick: mClickPosition:" + mClickPosition);
+            startActivityForResult(intent, REQUEST_CODE_CRIME_ACTIVITY);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_CRIME_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "onActivityResult: result ok, mClickPosition:" + mClickPosition);
+                if (mClickPosition != -1) {
+                    mAdapter.notifyItemChanged(mClickPosition);
+                }
+            }
         }
     }
 
