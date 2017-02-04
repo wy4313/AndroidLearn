@@ -2,6 +2,7 @@ package com.example.learn.learn05;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -29,9 +30,10 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private Button mDetailDateButton;
     private CheckBox mSolvedCheckbox;
 
+    private static final String DIALOG_DATE = "DialogDate";
+
 
     private static final String BUNDLE_KEY_CRIME_ID = "com.example.learn.learn05.CrimeFragment.BundleKeyCrimeId";
-
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BUNDLE_KEY_CRIME_ID, crimeId);
@@ -83,7 +85,15 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
 
         mDetailDateButton = (Button) v.findViewById(R.id.fragment_crime_details_date);
         mDetailDateButton.setText(mCrime.getDate().toString());
-        mDetailDateButton.setEnabled(false);
+        //mDetailDateButton.setEnabled(false);
+        mDetailDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.support.v4.app.FragmentManager fm = getFragmentManager();
+                DatePickerFragment dialog = new DatePickerFragment();
+                dialog.show(fm, DIALOG_DATE);
+            }
+        });
 
         mSolvedCheckbox = (CheckBox) v.findViewById(R.id.fragment_crime_check_box);
         mSolvedCheckbox.setChecked(mCrime.isSolved());
