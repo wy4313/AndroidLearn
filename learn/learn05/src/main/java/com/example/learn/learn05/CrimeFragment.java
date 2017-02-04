@@ -15,6 +15,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import java.util.UUID;
+
 /**
  * Created by wangyue20 on 2017/1/29.
  */
@@ -26,12 +28,25 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private Button mDetailDateButton;
     private CheckBox mSolvedCheckbox;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ");
+        super.onCreate(savedInstanceState);
+        CrimeLab crimes = CrimeLab.get(getActivity());
+        UUID crimeUUID = CrimeActivity.getIntentCrimeUUID(getActivity().getIntent());
+        mCrime = crimes.getCrime(crimeUUID);
+        Log.d(TAG, "onCreate: mCrime:" + mCrime + " UUID:" + crimeUUID + " crimeLab:" + crimes);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
         mTitleField = (EditText) v.findViewById(R.id.fragment_crime_title);
+        mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,6 +71,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         mDetailDateButton.setEnabled(false);
 
         mSolvedCheckbox = (CheckBox) v.findViewById(R.id.fragment_crime_check_box);
+        mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -64,12 +80,5 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             }
         });
         return v;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
-        super.onCreate(savedInstanceState);
-        mCrime = new Crime();
     }
 }
