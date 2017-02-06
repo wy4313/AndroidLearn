@@ -3,10 +3,12 @@ package com.example.learn.learn05;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -31,9 +34,10 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private CheckBox mSolvedCheckbox;
 
     private static final String DIALOG_DATE = "DialogDate";
+    private static final int REQUEST_CODE_DATE = 1;
+    private static final String BUNDLE_KEY_CRIME_ID =
+            "com.example.learn.learn05.CrimeFragment.BundleKeyCrimeId";
 
-
-    private static final String BUNDLE_KEY_CRIME_ID = "com.example.learn.learn05.CrimeFragment.BundleKeyCrimeId";
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BUNDLE_KEY_CRIME_ID, crimeId);
@@ -90,7 +94,8 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 android.support.v4.app.FragmentManager fm = getFragmentManager();
-                DatePickerFragment dialog = new DatePickerFragment();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_DATE);
                 dialog.show(fm, DIALOG_DATE);
             }
         });
@@ -110,5 +115,25 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
 
     private void setFragmentResult() {
         getActivity().setResult(Activity.RESULT_OK, null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        if (Activity.RESULT_OK != resultCode) {
+            return;
+        }
+
+        if (requestCode == REQUEST_CODE_DATE) {
+            Date date = (Date) data.
+                    getSerializableExtra(DatePickerFragment.EXTRA_KEY_DATE);
+            mCrime.setDate(date);
+            mDetailDateButton.setText(
+                    DateFormat.format(
+                            getString(R.string.global_date_format),
+                            mCrime.getDate())
+            );
+        }
+
     }
 }
