@@ -34,9 +34,11 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private CheckBox mSolvedCheckbox;
 
     private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_TIME = "DialogTime";
     private static final int REQUEST_CODE_DATE = 1;
     private static final String BUNDLE_KEY_CRIME_ID =
             "com.example.learn.learn05.CrimeFragment.BundleKeyCrimeId";
+    private Button mDetailTimeButton;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle bundle = new Bundle();
@@ -89,7 +91,6 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
 
         mDetailDateButton = (Button) v.findViewById(R.id.fragment_crime_details_date);
         mDetailDateButton.setText(mCrime.getDate().toString());
-        //mDetailDateButton.setEnabled(false);
         mDetailDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +98,19 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_DATE);
                 dialog.show(fm, DIALOG_DATE);
+            }
+        });
+
+        mDetailTimeButton = (Button) v.findViewById(R.id.fragment_crime_details_time);
+        mDetailTimeButton.setText(DateFormat.format("HH:mm:ss", mCrime.getDate()));
+        mDetailTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.support.v4.app.FragmentManager fm = getFragmentManager();
+//                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+//                dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_DATE);
+                TimePickerFragment dialog = new TimePickerFragment();
+                dialog.show(fm, DIALOG_TIME);
             }
         });
 
