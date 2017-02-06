@@ -5,6 +5,7 @@
     <string name="fragment_crime_solved_label">Solved</string>
     <string name="fragment_crime_title_text">TITLE</string>
     <string name="date_picker_title">Date of Crime</string>
-    <string name="global_date_format">HH:mm:ss \'at\' yyyy.MM.dd</string>
+    <string name="global_date_format">yyyy.MM.dd</string>
     <string name="time_picker_title">Crime Time</string>
+    <string name="global_date_time_format">HH:mm:ss</string>
 </resources>

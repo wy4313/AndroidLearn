@@ -36,6 +36,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
     private static final int REQUEST_CODE_DATE = 1;
+    private static final int REQUEST_CODE_TIME = 2;
     private static final String BUNDLE_KEY_CRIME_ID =
             "com.example.learn.learn05.CrimeFragment.BundleKeyCrimeId";
     private Button mDetailTimeButton;
@@ -90,7 +91,11 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         });
 
         mDetailDateButton = (Button) v.findViewById(R.id.fragment_crime_details_date);
-        mDetailDateButton.setText(mCrime.getDate().toString());
+        mDetailDateButton.setText(
+                DateFormat.format(
+                        getString(R.string.global_date_format),
+                        mCrime.getDate())
+        );
         mDetailDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,14 +107,16 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         });
 
         mDetailTimeButton = (Button) v.findViewById(R.id.fragment_crime_details_time);
-        mDetailTimeButton.setText(DateFormat.format("HH:mm:ss", mCrime.getDate()));
+        mDetailTimeButton.setText(DateFormat.format(
+                getString(R.string.global_date_time_format),
+                mCrime.getDate())
+        );
         mDetailTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 android.support.v4.app.FragmentManager fm = getFragmentManager();
-//                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-//                dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_DATE);
-                TimePickerFragment dialog = new TimePickerFragment();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_TIME);
                 dialog.show(fm, DIALOG_TIME);
             }
         });
@@ -141,10 +148,27 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
         if (requestCode == REQUEST_CODE_DATE) {
             Date date = (Date) data.
                     getSerializableExtra(DatePickerFragment.EXTRA_KEY_DATE);
+
+            /*keep time of day not change*/
+            Date crimeDate = mCrime.getDate();
+            date.setHours(crimeDate.getHours());
+            date.setMinutes(crimeDate.getMinutes());
+
             mCrime.setDate(date);
             mDetailDateButton.setText(
                     DateFormat.format(
                             getString(R.string.global_date_format),
+                            mCrime.getDate())
+            );
+        } else if (requestCode == REQUEST_CODE_TIME) {
+            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_KEY_TIME);
+            Date crimeDate = mCrime.getDate();
+            crimeDate.setHours(date.getHours());
+            crimeDate.setMinutes(date.getMinutes());
+            mCrime.setDate(crimeDate);
+            mDetailTimeButton.setText(
+                    DateFormat.format(
+                            getString(R.string.global_date_time_format),
                             mCrime.getDate())
             );
         }
