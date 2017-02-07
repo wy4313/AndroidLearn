@@ -10,5 +10,4 @@
         android:id="@+id/menu_item_show_subtitle"
         android:title="@string/show_subtitle"
         app:showAsAction="never"/>
-
 </menu>
