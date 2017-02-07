@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * Created by wangyue20 on 2017/2/4.
  */
 
-public class CrimePagerActivity extends FragmentActivity {
+public class CrimePagerActivity extends AppCompatActivity {
     private static final String TAG = "CrimePagerActivity";
 
     private List<Crime> mCrimes;
