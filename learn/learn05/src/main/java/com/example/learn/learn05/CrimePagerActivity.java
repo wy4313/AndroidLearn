@@ -1,5 +1,6 @@
 package com.example.learn.learn05;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
+import android.util.Log;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,13 +27,16 @@ public class CrimePagerActivity extends FragmentActivity {
     private List<Crime> mCrimes;
     private ViewPager mViewPager;
     private UUID mCrimeId;
+    private List<UUID> mUUIDList;
 
-    private static final String EXTRA_KEY_CIMRE_ID =
+    private static final String EXTRA_KEY_CRIME_ID =
             "com.example.learn.learn05.CrimePagerActivity.ExtraKeyCrimeId";
+    public static final String EXTRA_KEY_FLUSH_CRIME_IDS =
+            "com.example.learn.learn05.CrimePagerActivity.ExtraKeyFlushCrimeIds";
 
     public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
-        intent.putExtra(EXTRA_KEY_CIMRE_ID, crimeId);
+        intent.putExtra(EXTRA_KEY_CRIME_ID, crimeId);
         return intent;
     }
 
@@ -57,8 +62,34 @@ public class CrimePagerActivity extends FragmentActivity {
             }
         });
 
-        mCrimeId = (UUID) getIntent().getSerializableExtra(EXTRA_KEY_CIMRE_ID);
+        mCrimeId = (UUID) getIntent().getSerializableExtra(EXTRA_KEY_CRIME_ID);
         Crime crime = CrimeLab.get(this).getCrime(mCrimeId);
         mViewPager.setCurrentItem(mCrimes.indexOf(crime));
+    }
+
+    public void updateFlushUUID(UUID uuid) {
+        if (mUUIDList == null) {
+            mUUIDList = new ArrayList<>();
+        }
+        mUUIDList.add(uuid);
+    }
+
+    private void setReturnResult(int resultCode) {
+        if (mUUIDList == null) {
+            Log.d(TAG, "setResult: uuid list is null");
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_KEY_FLUSH_CRIME_IDS, (Serializable) mUUIDList);
+        setResult(resultCode, intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        if (mUUIDList != null && mUUIDList.size() != 0) {
+            setReturnResult(Activity.RESULT_OK);
+        }
+        finish();
     }
 }

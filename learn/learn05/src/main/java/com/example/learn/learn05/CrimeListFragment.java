@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -26,7 +27,7 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
     private static final String TAG = "CrimeListFragment";
     private static final int REQUEST_CODE_CRIME_ACTIVITY = 1;
-    private static int mClickPosition = -1;
+    private static final int REQUEST_CODE_CRIME_PAGER_ACTIVITY = 2;
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
@@ -42,7 +43,6 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
-
         return view;
     }
 
@@ -82,10 +82,12 @@ public class CrimeListFragment extends Fragment {
         public TextView mTitleTextView;
         public TextView mDateTextView;
         private Crime mCrime;
+        private int mPosition;
 
 
         public CrimeHolder(View itemView) {
             super(itemView);
+
             itemView.setOnClickListener(this);
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_crime_title_text_view);
@@ -102,8 +104,9 @@ public class CrimeListFragment extends Fragment {
         }
 
 
-        public void bindCrime(Crime crime) {
+        public void bindCrime(Crime crime, int position) {
             mCrime = crime;
+            mPosition = position;
             mTitleTextView.setText(crime.getTitle());
             mDateTextView.setText(crime.getDate().toString());
             mSolvedCheckBox.setChecked(crime.isSolved());
@@ -114,20 +117,27 @@ public class CrimeListFragment extends Fragment {
             Toast.makeText(getActivity(), mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT).show();
             Intent intent = CrimePagerActivity.newIntent(getContext(), mCrime.getId());
             //startActivity(intent);
-            mClickPosition = mCrimeList.indexOf(mCrime);
-            Log.d(TAG, "onClick: mClickPosition:" + mClickPosition);
-            startActivityForResult(intent, REQUEST_CODE_CRIME_ACTIVITY);
+            Log.d(TAG, "onClick: position:" + mPosition);
+            startActivityForResult(intent, REQUEST_CODE_CRIME_PAGER_ACTIVITY);
+//            startActivityForResult(intent, REQUEST_CODE_CRIME_ACTIVITY);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CRIME_ACTIVITY) {
+        if (requestCode == REQUEST_CODE_CRIME_PAGER_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
-                Log.d(TAG, "onActivityResult: result ok, mClickPosition:" + mClickPosition);
-                if (mClickPosition != -1) {
-                    mAdapter.notifyItemChanged(mClickPosition);
+                if (data != null) {
+                    List<UUID> uuids = (List<UUID>) data
+                            .getSerializableExtra(CrimePagerActivity.EXTRA_KEY_FLUSH_CRIME_IDS);
+                    Log.d(TAG, "onActivityResult: uuid list size:" + uuids.size());
+                    for (UUID uuid : uuids) {
+                        Log.d(TAG, "onActivityResult: uuid:" + uuid);
+                        mAdapter.notifyItemChanged(
+                                mCrimeList.indexOf(CrimeLab.get(getContext()).getCrime(uuid))
+                        );
+                    }
                 }
             }
         }
@@ -152,7 +162,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            holder.bindCrime(crime);
+            holder.bindCrime(crime, position);
         }
 
         @Override
