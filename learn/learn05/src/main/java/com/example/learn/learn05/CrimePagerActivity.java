@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -93,6 +95,7 @@ public class CrimePagerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
+        Log.d(TAG, "onBackPressed: !!!");
         if (mUUIDList != null && mUUIDList.size() != 0) {
             setReturnResult(Activity.RESULT_OK);
         }

@@ -9,4 +9,7 @@
     <string name="time_picker_title">Crime Time</string>
     <string name="global_date_time_format">HH:mm:ss</string>
     <string name="new_crime">New Crime</string>
+    <string name="show_subtitle">Show SubTitile</string>
+    <string name="subtitle_format">%1$s crimes</string>
+    <string name="hide_subtitle">Hide SubTitle</string>
 </resources>

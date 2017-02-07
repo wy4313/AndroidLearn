@@ -35,6 +35,8 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private List<Crime> mCrimeList;
+    private static boolean mSubtitleVisible;
+    private MenuItem mSubTitleMenuOption;
 
     @Nullable
     @Override
@@ -71,8 +73,13 @@ public class CrimeListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "onCreateOptionsMenu: ");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list, menu);
+
+        mSubTitleMenuOption = menu.findItem(R.id.menu_item_show_subtitle);
+        Log.d(TAG, "onCreateOptionsMenu: mSubtitleVisible:" + mSubtitleVisible);
+        updateSubtitle();
     }
 
     @Override
@@ -84,11 +91,34 @@ public class CrimeListFragment extends Fragment {
 
                 Intent intent = CrimePagerActivity.newIntent(getContext(), crime.getId());
                 startActivityForResult(intent, REQUEST_CODE_CRIME_PAGER_ACTIVITY);
-                break;
+                return true;
+            case R.id.menu_item_show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                //getActivity().invalidateOptionsMenu();
+                updateSubtitle();
+                return true;
+            case android.R.id.home:
+                Log.d(TAG, "onOptionsItemSelected: home has selected");
             default:
                 return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void updateSubtitle() {
+        int count = CrimeLab.get(getContext()).getCrimes().size();
+        String subTitle = getString(R.string.subtitle_format, count);
+        Log.d(TAG, "updateSubtitle: mSubtitleVisible:" + mSubtitleVisible);
+        if (false == mSubtitleVisible) {
+            subTitle = null;
+        }
+        CrimeListActivity activity = (CrimeListActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subTitle);
+
+        if (mSubtitleVisible) {
+            mSubTitleMenuOption.setTitle(R.string.hide_subtitle);
+        } else {
+            mSubTitleMenuOption.setTitle(R.string.show_subtitle);
+        }
     }
 
     private void updateUI() {
@@ -196,4 +226,6 @@ public class CrimeListFragment extends Fragment {
             return mCrimes.size();
         }
     }
+
+
 }
