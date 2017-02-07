@@ -71,6 +71,11 @@ public class CrimePagerActivity extends FragmentActivity {
         if (mUUIDList == null) {
             mUUIDList = new ArrayList<>();
         }
+
+        if (mUUIDList.contains(uuid)) {
+            //uuid already in list
+            return;
+        }
         mUUIDList.add(uuid);
     }
 

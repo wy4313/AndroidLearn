@@ -103,6 +103,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_DATE);
                 dialog.show(fm, DIALOG_DATE);
+                setFragmentResult(mCrime.getId());
             }
         });
 
@@ -118,6 +119,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
                 TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_CODE_TIME);
                 dialog.show(fm, DIALOG_TIME);
+                setFragmentResult(mCrime.getId());
             }
         });
 
