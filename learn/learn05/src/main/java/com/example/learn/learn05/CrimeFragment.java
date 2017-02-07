@@ -71,7 +71,7 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.d(TAG, "onTextChanged: ");
                 mCrime.setTitle(s.toString());
-                setFragmentResult();
+                setFragmentResult(mCrime.getId());
             }
 
             @Override
@@ -92,13 +92,15 @@ public class CrimeFragment extends android.support.v4.app.Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.d(TAG, "onCheckedChanged: ");
                 mCrime.setSolved(isChecked);
-                setFragmentResult();
+                setFragmentResult(mCrime.getId());
             }
         });
         return v;
     }
 
-    private void setFragmentResult() {
-        getActivity().setResult(Activity.RESULT_OK, null);
+    private void setFragmentResult(UUID uuid) {
+//        getActivity().setResult(Activity.RESULT_OK, null);
+        CrimePagerActivity activity = (CrimePagerActivity) getActivity();
+        activity.updateFlushUUID(uuid);
     }
 }

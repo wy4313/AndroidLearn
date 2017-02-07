@@ -22,9 +22,7 @@ public class CrimeLab {
         if (sCrimeLab == null) {
             sCrimeLab = new CrimeLab(context);
         }
-
-
-        Log.d(TAG, "get: sCrimeLab:" + sCrimeLab);
+        Log.v(TAG, "get: sCrimeLab:" + sCrimeLab);
         return sCrimeLab;
     }
 
@@ -46,7 +44,7 @@ public class CrimeLab {
     public Crime getCrime(UUID id) {
         for (Crime crime : mCrimes) {
             if (0 == crime.getId().compareTo(id)) {
-                Log.d(TAG, "getCrime: find!!!");
+                Log.v(TAG, "getCrime: find!!!");
                 return crime;
             }
         }
